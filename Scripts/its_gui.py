@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from owlready2 import get_ontology
+import os
 
 class ModernITS:
     def __init__(self, root, onto):
@@ -82,14 +83,14 @@ class ModernITS:
         filters.pack(fill="x", pady=(6, 12))
 
         ttk.Label(filters, text="Shape:", background=self.APP_BG, font=("Segoe UI", 11)).pack(side="left")
-        self.shape_var = tk.StringVar(value=(sorted(self.shape_map.keys())[0] if self.shape_map else ""))
+        self.shape_var = tk.StringVar(value=(sorted(self.shape_map.keys())[1] if self.shape_map else ""))
         self.shape_combo = ttk.Combobox(filters, state="readonly", width=18,
                                         values=sorted(self.shape_map.keys()), textvariable=self.shape_var)
         self.shape_combo.pack(side="left", padx=(8, 18))
         self.shape_combo.bind("<<ComboboxSelected>>", lambda e: self.apply_filters())
 
         ttk.Label(filters, text="Skill Level:", background=self.APP_BG, font=("Segoe UI", 11)).pack(side="left")
-        self.level_var = tk.StringVar(value=(sorted(self.level_map.keys())[0] if self.level_map else ""))
+        self.level_var = tk.StringVar(value=(sorted(self.level_map.keys())[1] if self.level_map else ""))
         self.level_combo = ttk.Combobox(filters, state="readonly", width=18,
                                         values=sorted(self.level_map.keys()), textvariable=self.level_var)
         self.level_combo.pack(side="left", padx=(8, 18))
@@ -320,7 +321,11 @@ class ModernITS:
 
 
 def main():
-    onto = get_ontology("file://D:/Aashiq/ITSProject/itsformath_ontology.rdf").load()
+    
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    ONTO_PATH = os.path.join(BASE_DIR, "itsformath_ontology.rdf")
+
+    onto = get_ontology(f"file://{ONTO_PATH}").load()
     root = tk.Tk()
     ModernITS(root, onto)
     root.mainloop()
